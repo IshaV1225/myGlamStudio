@@ -1,5 +1,8 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## About this webapp
+A glam studio that saves all the makeup looks you have create with the porducts you own and skills you use. Save looks as pictures or videos to keep track of your favrouite skills for when you're looking for something on the go.
+
 ## Getting Started
 
 First, run the development server:
