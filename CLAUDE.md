@@ -1,2 +1,4 @@
 @AGENTS.md
 @PROJECT.md
+@DESIGN.md
+@PROGRESS.md
