@@ -3,9 +3,11 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@/contexts/UserContext';
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { updateProfile } = useUser();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,7 +15,7 @@ export default function RegisterPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: { preventDefault(): void }) {
     e.preventDefault();
     setError('');
     if (password !== confirm) {
@@ -27,7 +29,7 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       // TODO: replace with Firebase / Supabase auth call
-      // On success → redirect to onboarding (first-time setup)
+      if (name.trim()) updateProfile({ name: name.trim(), email: email.trim() });
       router.push('/onboarding');
     } catch {
       setError('Something went wrong. Please try again.');

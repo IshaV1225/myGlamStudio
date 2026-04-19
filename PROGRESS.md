@@ -33,20 +33,28 @@
 - [x] `app/(app)/looks/page.tsx` — masonry grid, All / ★ Top 5 filter tabs, Add Look modal (name, images, toggle, steps, products)
 - [x] `app/(app)/looks/[lookId]/page.tsx` — image carousel with dots + thumbnails, steps list, products, mood board links, remove confirm modal
 
-## Batch 6 — My Brands + Products 🔜
-- [ ] `app/products/page.tsx`
-- [ ] Add Product modal, Add Brand modal
+## Batch 6 — My Brands + Products ✅
+- [x] `contexts/ProductsContext.tsx` — Product + Brand types, mock data, provider, `useProducts()` hook
+- [x] `app/(app)/products/page.tsx` — Top Products grid (heart toggle, max 20 favourites), All Products with Load More, Top Brands grid (clickable → external site, removable)
+- [x] Add Product modal — name, brand, image upload placeholder, favourite toggle
+- [x] Add Brand modal — name, optional website URL
+- [x] `app/(app)/layout.tsx` — `ProductsProvider` added alongside `LooksProvider`
 
-## Batch 7 — Mood Board 🔜
-- [ ] `app/moodboard/page.tsx`
-- [ ] Add Mood Board modal, AI description placeholder
+## Batch 7 — Mood Board ✅
+- [x] `contexts/MoodBoardContext.tsx` — MoodBoard type, mock data, provider, `useMoodBoards()` hook, localStorage persistence
+- [x] `app/(app)/moodboard/page.tsx` — 4-up grid preview cards, click-to-view popup with image grid + AI description section, Remove confirm modal, Add Board modal (name + image upload)
+- [x] `app/(app)/layout.tsx` — `MoodBoardProvider` added
 
-## Batch 8 — Settings + Beauty Portfolio 🔜
-- [ ] `app/settings/page.tsx`
-- [ ] `app/portfolio/page.tsx`
+## Batch 8 — Settings + Beauty Portfolio ✅
+- [x] `contexts/UserContext.tsx` — UserProfile type, defaults, provider, localStorage persistence
+- [x] `app/(app)/settings/page.tsx` — Name, Email, Password, Location, Skin Type — each with Edit popup
+- [x] `app/(app)/portfolio/page.tsx` — Hero gradient banner, Skin Type, Complexion, Preferred Brands, Preferred Looks (all editable), link to Products
+- [x] `app/(app)/layout.tsx` — UserProvider added
 
-## Batch 9 — Onboarding Quiz 🔜
-- [ ] `app/onboarding/page.tsx` — Multi-step wizard
+## Batch 9 — Onboarding Quiz ✅
+- [x] `app/(auth)/onboarding/page.tsx` — 9-step wizard: Name → Age → Skin Type → Skin Tone → Undertone → Preferred Looks → Preferred Brands → Location → Hero Image
+- Progress bar with step counter, Back/Next navigation, skip support on optional steps
+- Saves all fields to UserContext on finish, redirects to /home
 
-## Batch 10 — My Inspo (placeholder) 🔜
-- [ ] `app/inspo/page.tsx` — Coming Soon UI
+## Batch 10 — My Inspo (placeholder) ✅
+- [x] `app/(app)/inspo/page.tsx` — Coming Soon UI with blurred gradient mosaic background, preview card grid, 5 planned-feature cards, Pinterest early-access CTA linking to Mood Boards

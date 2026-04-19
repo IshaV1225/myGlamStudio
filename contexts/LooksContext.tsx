@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -110,6 +110,16 @@ const LooksContext = createContext<LooksCtx | null>(null);
 
 export function LooksProvider({ children }: { children: ReactNode }) {
   const [looks, setLooks] = useState<Look[]>(INITIAL_LOOKS);
+
+  // Hydrate from localStorage after mount (avoids SSR/client mismatch)
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('gs_looks');
+      if (raw) setLooks(JSON.parse(raw) as Look[]);
+    } catch { /* ignore */ }
+  }, []);
+
+  useEffect(() => { localStorage.setItem('gs_looks', JSON.stringify(looks)); }, [looks]);
 
   function addLook(look: Look) {
     setLooks((prev) => [look, ...prev]);

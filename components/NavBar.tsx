@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { useUser } from '@/contexts/UserContext';
 
 const navLinks = [
   { href: '/looks',     label: 'My Looks' },
@@ -14,6 +15,7 @@ const navLinks = [
 export default function NavBar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { profile } = useUser();
 
   function isActive(href: string) {
     if (href === '/home') return pathname === '/home';
@@ -50,7 +52,7 @@ export default function NavBar() {
             className="text-accent text-2xl md:text-3xl hover:opacity-80 transition-opacity whitespace-nowrap"
             style={{ fontFamily: "'Arcadian', Georgia, serif" }}
           >
-            Isha&apos;s Glam Studio
+            {profile.name}&apos;s Glam Studio
           </Link>
         </div>
 

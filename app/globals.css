@@ -34,3 +34,24 @@ body {
     display: none;
   }
 }
+
+/* Palette-matched scrollbar for all scrollable elements */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #4B3B8C #1C1333;
+}
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+*::-webkit-scrollbar-track {
+  background: #1C1333;
+  border-radius: 99px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #4B3B8C;
+  border-radius: 99px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #7B3F6E;
+}
