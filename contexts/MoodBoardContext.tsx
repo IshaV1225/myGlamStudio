@@ -19,14 +19,14 @@ export interface MoodBoard {
 // ---------------------------------------------------------------------------
 
 const PALETTE = [
-  'linear-gradient(135deg, #4B3B8C, #7B3F6E)',
-  'linear-gradient(135deg, #F4796B, #F9B4A8)',
-  'linear-gradient(135deg, #0F0A1E, #4B3B8C)',
-  'linear-gradient(135deg, #7B3F6E, #F4796B)',
-  'linear-gradient(135deg, #1C1333, #9B8DB0)',
-  'linear-gradient(135deg, #F9B4A8, #4B3B8C)',
-  'linear-gradient(135deg, #9B8DB0, #7B3F6E)',
-  'linear-gradient(135deg, #4B3B8C, #F4796B)',
+  'linear-gradient(135deg, #CDB4DB, #FFAFCC)',
+  'linear-gradient(135deg, #FFAFCC, #FFC8DD)',
+  'linear-gradient(135deg, #FFC8DD, #BDE0FE)',
+  'linear-gradient(135deg, #BDE0FE, #A2D2FF)',
+  'linear-gradient(135deg, #A2D2FF, #CDB4DB)',
+  'linear-gradient(135deg, #FFC8DD, #FFAFCC)',
+  'linear-gradient(135deg, #CDB4DB, #BDE0FE)',
+  'linear-gradient(135deg, #FFAFCC, #A2D2FF)',
 ];
 
 export function makeGradients(count: number): string[] {

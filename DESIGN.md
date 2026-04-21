@@ -5,19 +5,19 @@
 - **File location:** `public/fonts/Arcadian.woff2` (user must add the font file manually)
 - **Fallback:** `Georgia, serif` (renders until font file is present)
 
-## Color Palette — "Ocean Sunset"
+## Color Palette — "Pastel Dream"
 Defined as `@theme` tokens in `globals.css` (Tailwind v4 pattern — no `tailwind.config.js` needed).
 
-| Token | Value | Usage |
-|---|---|---|
-| `--color-primary` | `#4B3B8C` | Deep Indigo — primary buttons, active states |
-| `--color-secondary` | `#7B3F6E` | Deep Plum — secondary elements |
-| `--color-accent` | `#F4796B` | Coral Pink — CTAs, highlights, headings |
-| `--color-accent-light` | `#F9B4A8` | Soft Coral — hover states, tags |
-| `--color-bg` | `#0F0A1E` | Near-black indigo — page background |
-| `--color-surface` | `#1C1333` | Card and panel background |
-| `--color-foreground` | `#F5EEF8` | Off-white — body text |
-| `--color-muted` | `#9B8DB0` | Muted labels and secondary text |
+| Token | Value | Name | Usage |
+|---|---|---|---|
+| `--color-primary` | `#CDB4DB` | Pink Orchid | Primary buttons, active states |
+| `--color-secondary` | `#A2D2FF` | Sky Blue | Secondary elements |
+| `--color-accent` | `#FFAFCC` | Blush Pop | CTAs, highlights |
+| `--color-accent-light` | `#FFC8DD` | Pastel Petal | Hover states, tags |
+| `--color-bg` | `#EBF5FB` | Baby Blue | Page background |
+| `--color-surface` | `#D6ECFA` | Soft Blue | Card and panel background |
+| `--color-foreground` | `#1A0D2E` | Deep Purple-Black | Body text |
+| `--color-muted` | `#6B9EC4` | Muted Blue-Grey | Labels and secondary text |
 
 Tailwind utility classes auto-generated: `bg-primary`, `text-accent`, `bg-surface`, `text-muted`, etc.
 

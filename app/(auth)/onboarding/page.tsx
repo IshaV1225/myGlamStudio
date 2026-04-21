@@ -26,11 +26,11 @@ const TOTAL_STEPS = 9;
 // ---------------------------------------------------------------------------
 
 const inputCls =
-  'w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-accent transition-colors text-sm';
+  'w-full bg-white/70 border border-primary/30 rounded-xl px-4 py-3 text-foreground placeholder:text-muted focus:outline-none focus:border-accent transition-colors text-sm';
 
 const chipBase  = 'py-2 px-4 rounded-full text-sm border transition-colors cursor-pointer';
-const chipOn    = 'bg-accent/25 border-accent text-accent';
-const chipOff   = 'bg-white/5 border-white/20 text-white/70 hover:border-accent/50 hover:text-white';
+const chipOn    = 'bg-accent/40 border-accent text-foreground';
+const chipOff   = 'bg-white/50 border-primary/30 text-foreground/70 hover:border-accent/60 hover:text-foreground';
 
 // ---------------------------------------------------------------------------
 // Progress bar
@@ -39,11 +39,11 @@ const chipOff   = 'bg-white/5 border-white/20 text-white/70 hover:border-accent/
 function ProgressBar({ step, total }: { step: number; total: number }) {
   return (
     <div className="w-full">
-      <div className="flex justify-between text-white/40 text-xs mb-2">
+      <div className="flex justify-between text-muted text-xs mb-2">
         <span>Step {step} of {total}</span>
         <span>{Math.round((step / total) * 100)}%</span>
       </div>
-      <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+      <div className="h-1 bg-primary/20 rounded-full overflow-hidden">
         <div
           className="h-full bg-accent rounded-full transition-all duration-500"
           style={{ width: `${(step / total) * 100}%` }}
@@ -74,8 +74,8 @@ function StepShell({
       <ProgressBar step={step} total={TOTAL_STEPS} />
 
       <div>
-        <h2 className="text-2xl text-white">{title}</h2>
-        {subtitle && <p className="text-white/50 text-sm mt-1">{subtitle}</p>}
+        <h2 className="text-2xl text-foreground">{title}</h2>
+        {subtitle && <p className="text-muted text-sm mt-1">{subtitle}</p>}
       </div>
 
       <div className="flex-1">{children}</div>
@@ -83,7 +83,7 @@ function StepShell({
       <div className="flex gap-3">
         {onBack && (
           <button onClick={onBack}
-            className="flex-1 py-3 rounded-xl border border-white/20 text-white/70 hover:text-white hover:border-white/40 transition-colors text-sm">
+            className="flex-1 py-3 rounded-xl border border-primary/30 text-foreground/70 hover:text-foreground hover:border-primary/60 transition-colors text-sm">
             ← Back
           </button>
         )}
@@ -179,9 +179,9 @@ export default function OnboardingPage() {
   return (
     <div
       className="min-h-screen flex items-center justify-center p-6"
-      style={{ background: 'linear-gradient(135deg, #0F0A1E 0%, #4B3B8C 50%, #7B3F6E 100%)' }}
+      style={{ background: 'linear-gradient(135deg, #BDE0FE 0%, #CDB4DB 50%, #FFAFCC 100%)' }}
     >
-      <div className="w-full max-w-md bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-8 shadow-2xl">
+      <div className="w-full max-w-md bg-white/60 backdrop-blur-md border border-white/80 rounded-3xl p-8 shadow-2xl">
 
         {/* Step 1 — Name */}
         {step === 1 && (
@@ -298,15 +298,15 @@ export default function OnboardingPage() {
             <div className="space-y-3">
               <input value={locationSearch} onChange={(e) => setLocationSearch(e.target.value)}
                 placeholder="Search country..." className={inputCls} />
-              <div className="h-52 overflow-y-auto rounded-xl border border-white/10 divide-y divide-white/5">
+              <div className="h-52 overflow-y-auto rounded-xl border border-primary/20 divide-y divide-primary/10">
                 {filteredCountries.map((c) => (
                   <button key={c} onClick={() => setLocation(c)}
-                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${location === c ? 'bg-accent/20 text-accent' : 'text-white/60 hover:bg-white/5 hover:text-white'}`}>
+                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${location === c ? 'bg-accent/30 text-foreground' : 'text-foreground/60 hover:bg-white/40 hover:text-foreground'}`}>
                     {c}
                   </button>
                 ))}
               </div>
-              {location && <p className="text-accent text-sm">Selected: <span className="text-white">{location}</span></p>}
+              {location && <p className="text-accent text-sm">Selected: <span className="text-foreground">{location}</span></p>}
             </div>
           </StepShell>
         )}
@@ -316,10 +316,10 @@ export default function OnboardingPage() {
           <StepShell title="Add a hero image?" subtitle="Optional — set the look of your studio banner."
             step={9} onBack={back} onNext={finish} nextLabel="Finish & Enter My Studio ✨">
             <div className="space-y-4">
-              <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-white/20 rounded-2xl cursor-pointer hover:border-accent transition-colors text-white/50 text-sm gap-2">
+              <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-primary/30 rounded-2xl cursor-pointer hover:border-accent transition-colors text-muted text-sm gap-2">
                 <span className="text-4xl">📸</span>
                 <span>Click to upload a hero image</span>
-                <span className="text-xs text-white/30">or skip — you can set this later in your portfolio</span>
+                <span className="text-xs text-muted/60">or skip — you can set this later in your portfolio</span>
                 <input type="file" accept="image/*" className="hidden" />
               </label>
             </div>

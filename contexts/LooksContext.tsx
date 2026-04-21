@@ -22,14 +22,14 @@ export interface Look {
 // ---------------------------------------------------------------------------
 
 const PALETTE = [
-  'linear-gradient(135deg, #4B3B8C, #7B3F6E)',
-  'linear-gradient(135deg, #7B3F6E, #F4796B)',
-  'linear-gradient(135deg, #F4796B, #4B3B8C)',
-  'linear-gradient(135deg, #0F0A1E, #4B3B8C)',
-  'linear-gradient(135deg, #F9B4A8, #F4796B)',
-  'linear-gradient(135deg, #4B3B8C, #F9B4A8)',
-  'linear-gradient(135deg, #1C1333, #7B3F6E)',
-  'linear-gradient(135deg, #9B8DB0, #1C1333)',
+  'linear-gradient(135deg, #CDB4DB, #FFAFCC)',
+  'linear-gradient(135deg, #FFAFCC, #FFC8DD)',
+  'linear-gradient(135deg, #FFC8DD, #BDE0FE)',
+  'linear-gradient(135deg, #BDE0FE, #A2D2FF)',
+  'linear-gradient(135deg, #A2D2FF, #CDB4DB)',
+  'linear-gradient(135deg, #CDB4DB, #BDE0FE)',
+  'linear-gradient(135deg, #FFAFCC, #A2D2FF)',
+  'linear-gradient(135deg, #FFC8DD, #CDB4DB)',
 ];
 
 export function makeGradients(count: number): string[] {
@@ -44,52 +44,52 @@ const INITIAL_LOOKS: Look[] = [
   {
     id: '1', name: 'Evening Glam', isTopFive: true, heightClass: 'h-80', moodBoards: ['Evening Edit'],
     gradients: [
-      'linear-gradient(135deg, #4B3B8C, #7B3F6E)',
-      'linear-gradient(135deg, #7B3F6E, #F4796B)',
-      'linear-gradient(135deg, #F4796B, #4B3B8C)',
+      'linear-gradient(135deg, #CDB4DB, #FFAFCC)',
+      'linear-gradient(135deg, #FFAFCC, #FFC8DD)',
+      'linear-gradient(135deg, #FFC8DD, #BDE0FE)',
     ],
     steps: ['Prep skin with primer', 'Apply full-coverage foundation', 'Contour cheekbones', 'Smoky cut-crease eye', 'Highlight inner corners', 'Bold lip'],
     productsUsed: ["Pro Filt'r Foundation — Fenty Beauty", 'Lip Liner — Charlotte Tilbury'],
   },
   {
     id: '2', name: 'Smoky Eye', isTopFive: true, heightClass: 'h-64', moodBoards: ['Smoky'],
-    gradients: ['linear-gradient(135deg, #0F0A1E, #4B3B8C)', 'linear-gradient(135deg, #4B3B8C, #1C1333)'],
+    gradients: ['linear-gradient(135deg, #A2D2FF, #CDB4DB)', 'linear-gradient(135deg, #CDB4DB, #BDE0FE)'],
     steps: ['Dark base on lid', 'Blend outer V', 'Lower lash line smoke', 'Volumising mascara'],
     productsUsed: ['Mascara — Lancôme'],
   },
   {
     id: '3', name: 'Natural Flush', isTopFive: true, heightClass: 'h-72', moodBoards: ['Clean Girl'],
-    gradients: ['linear-gradient(135deg, #F9B4A8, #F4796B)', 'linear-gradient(135deg, #F4796B, #7B3F6E)'],
+    gradients: ['linear-gradient(135deg, #FFC8DD, #FFAFCC)', 'linear-gradient(135deg, #FFAFCC, #CDB4DB)'],
     steps: ['Tinted moisturiser', 'Cream blush on cheeks', 'Gloss on lips', 'Mascara'],
     productsUsed: ['Blush Stick — Rare Beauty', 'Mascara — Lancôme'],
   },
   {
     id: '4', name: 'Sunset Drama', isTopFive: true, heightClass: 'h-56', moodBoards: [],
-    gradients: ['linear-gradient(135deg, #7B3F6E, #F4796B)', 'linear-gradient(135deg, #F4796B, #F9B4A8)'],
+    gradients: ['linear-gradient(135deg, #FFAFCC, #FFC8DD)', 'linear-gradient(135deg, #FFC8DD, #A2D2FF)'],
     steps: ['Orange cut-crease', 'Pink transition shade', 'Gold inner corner', 'Nude lip'],
     productsUsed: ['Lip Liner — Charlotte Tilbury'],
   },
   {
     id: '5', name: 'Clean Girl', isTopFive: true, heightClass: 'h-80', moodBoards: ['Clean Girl', 'Icy'],
-    gradients: ['linear-gradient(135deg, #9B8DB0, #1C1333)', 'linear-gradient(135deg, #1C1333, #4B3B8C)'],
+    gradients: ['linear-gradient(135deg, #BDE0FE, #A2D2FF)', 'linear-gradient(135deg, #A2D2FF, #CDB4DB)'],
     steps: ['SPF moisturiser', 'Concealer where needed', 'Brow gel', 'Mascara', 'Gloss'],
     productsUsed: ['Brow Pencil — Anastasia BH', 'Mascara — Lancôme'],
   },
   {
     id: '6', name: 'Bridal Glow', isTopFive: false, heightClass: 'h-72', moodBoards: [],
-    gradients: ['linear-gradient(135deg, #F9B4A8, #7B3F6E)'],
+    gradients: ['linear-gradient(135deg, #FFC8DD, #CDB4DB)'],
     steps: ['Hydrating prep', 'Satin foundation', 'Rosy blush', 'Soft shimmer eye', 'Nude-pink lip'],
     productsUsed: ["Pro Filt'r Foundation — Fenty Beauty", 'Blush Stick — Rare Beauty'],
   },
   {
     id: '7', name: 'Editorial Edge', isTopFive: false, heightClass: 'h-96', moodBoards: [],
-    gradients: ['linear-gradient(135deg, #4B3B8C, #F4796B)', 'linear-gradient(135deg, #F4796B, #7B3F6E)'],
+    gradients: ['linear-gradient(135deg, #CDB4DB, #FFAFCC)', 'linear-gradient(135deg, #FFAFCC, #A2D2FF)'],
     steps: ['Bold graphic liner', 'Monochromatic lip + eye', 'Negative space detail'],
     productsUsed: ['Lip Liner — Charlotte Tilbury'],
   },
   {
     id: '8', name: 'Office Chic', isTopFive: false, heightClass: 'h-60', moodBoards: [],
-    gradients: ['linear-gradient(135deg, #1C1333, #9B8DB0)'],
+    gradients: ['linear-gradient(135deg, #BDE0FE, #CDB4DB)'],
     steps: ['Skin prep', 'Light coverage BB cream', 'Defined brows', 'Mascara', 'Satin lip'],
     productsUsed: ['Brow Pencil — Anastasia BH'],
   },

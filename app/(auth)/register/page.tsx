@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/contexts/UserContext';
+import { supabase } from '@/lib/supabase';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -28,11 +29,16 @@ export default function RegisterPage() {
     }
     setLoading(true);
     try {
-      // TODO: replace with Firebase / Supabase auth call
+      const { error: authError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { name: name.trim() } },
+      });
+      if (authError) throw authError;
       if (name.trim()) updateProfile({ name: name.trim(), email: email.trim() });
       router.push('/onboarding');
-    } catch {
-      setError('Something went wrong. Please try again.');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -47,7 +53,7 @@ export default function RegisterPage() {
             className="text-4xl md:text-5xl text-accent"
             style={{ fontFamily: "'Arcadian', Georgia, serif" }}
           >
-            Isha&apos;s Glam Studio
+            My Glam Studio
           </h1>
           <p className="text-muted mt-3 text-base">Start your beauty journey.</p>
         </div>

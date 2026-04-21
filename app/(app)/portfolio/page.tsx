@@ -16,12 +16,12 @@ const UNDERTONES   = ['Cool', 'Warm', 'Neutral', 'Olive'];
 const LOOK_OPTIONS = ['Full Glam', 'Office Going', 'Natural', 'Bridal', 'Editorial', 'Smoky', 'Clean Girl', 'Bold Lip'];
 
 const HERO_GRADIENTS = [
-  'linear-gradient(135deg, #4B3B8C 0%, #7B3F6E 50%, #F4796B 100%)',
-  'linear-gradient(135deg, #0F0A1E 0%, #4B3B8C 50%, #7B3F6E 100%)',
-  'linear-gradient(135deg, #7B3F6E 0%, #F4796B 50%, #F9B4A8 100%)',
-  'linear-gradient(135deg, #1C1333 0%, #7B3F6E 50%, #F4796B 100%)',
-  'linear-gradient(135deg, #F4796B 0%, #4B3B8C 100%)',
-  'linear-gradient(135deg, #9B8DB0 0%, #4B3B8C 50%, #0F0A1E 100%)',
+  'linear-gradient(135deg, #CDB4DB 0%, #FFAFCC 30%, #FFC8DD 60%, #BDE0FE 80%, #A2D2FF 100%)',
+  'linear-gradient(135deg, #FFAFCC 0%, #FFC8DD 50%, #BDE0FE 100%)',
+  'linear-gradient(135deg, #BDE0FE 0%, #A2D2FF 50%, #CDB4DB 100%)',
+  'linear-gradient(135deg, #FFC8DD 0%, #FFAFCC 50%, #A2D2FF 100%)',
+  'linear-gradient(135deg, #A2D2FF 0%, #BDE0FE 50%, #CDB4DB 100%)',
+  'linear-gradient(135deg, #CDB4DB 0%, #BDE0FE 50%, #FFAFCC 100%)',
 ];
 
 // ---------------------------------------------------------------------------

@@ -1,9 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useUser } from '@/contexts/UserContext';
+import { supabase } from '@/lib/supabase';
 
 const navLinks = [
   { href: '/looks',     label: 'My Looks' },
@@ -14,8 +15,14 @@ const navLinks = [
 
 export default function NavBar() {
   const pathname = usePathname();
+  const router   = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const { profile } = useUser();
+
+  async function handleSignOut() {
+    await supabase.auth.signOut();
+    router.push('/login');
+  }
 
   function isActive(href: string) {
     if (href === '/home') return pathname === '/home';
@@ -73,6 +80,13 @@ export default function NavBar() {
             >
               💄
             </Link>
+            <button
+              onClick={handleSignOut}
+              title="Sign out"
+              className="text-muted hover:text-accent transition-colors text-sm"
+            >
+              Sign out
+            </button>
           </div>
 
           {/* Mobile hamburger */}
@@ -116,6 +130,12 @@ export default function NavBar() {
             >
               💄 Beauty Portfolio
             </Link>
+            <button
+              onClick={handleSignOut}
+              className="text-muted hover:text-accent transition-colors text-sm"
+            >
+              Sign out
+            </button>
           </div>
         </div>
       )}

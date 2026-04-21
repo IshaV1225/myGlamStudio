@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -16,10 +17,11 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
     try {
-      // TODO: replace with Firebase / Supabase auth call
+      const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
+      if (authError) throw authError;
       router.push('/home');
-    } catch {
-      setError('Invalid email or password. Please try again.');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Invalid email or password. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -34,7 +36,7 @@ export default function LoginPage() {
             className="text-4xl md:text-5xl text-accent"
             style={{ fontFamily: "'Arcadian', Georgia, serif" }}
           >
-            Isha&apos;s Glam Studio
+            My Glam Studio
           </h1>
           <p className="text-muted mt-3 text-base">Welcome back, gorgeous.</p>
         </div>

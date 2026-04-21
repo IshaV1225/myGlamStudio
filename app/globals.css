@@ -10,14 +10,14 @@
 }
 
 @theme {
-  --color-primary:      #4B3B8C;
-  --color-secondary:    #7B3F6E;
-  --color-accent:       #F4796B;
-  --color-accent-light: #F9B4A8;
-  --color-bg:           #0F0A1E;
-  --color-surface:      #1C1333;
-  --color-foreground:   #F5EEF8;
-  --color-muted:        #9B8DB0;
+  --color-primary:      #CDB4DB;   /* Pink Orchid */
+  --color-secondary:    #A2D2FF;   /* Sky Blue */
+  --color-accent:       #FF5D8F;   /* Hot Pink */
+  --color-accent-light: #FF8FB1;   /* Soft Hot Pink */
+  --color-bg:           #EBF5FB;   /* Baby Blue */
+  --color-surface:      #D6ECFA;   /* Soft Blue surface */
+  --color-foreground:   #1A0D2E;   /* Deep purple-black text */
+  --color-muted:        #6B9EC4;   /* Muted blue-grey */
   --font-sans: 'Arcadian', Georgia, serif;
 }
 
@@ -35,23 +35,23 @@ body {
   }
 }
 
-/* Palette-matched scrollbar for all scrollable elements */
+/* Palette-matched scrollbar */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #4B3B8C #1C1333;
+  scrollbar-color: #CDB4DB #D6ECFA;
 }
 *::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 *::-webkit-scrollbar-track {
-  background: #1C1333;
+  background: #D6ECFA;
   border-radius: 99px;
 }
 *::-webkit-scrollbar-thumb {
-  background: #4B3B8C;
+  background: #CDB4DB;
   border-radius: 99px;
 }
 *::-webkit-scrollbar-thumb:hover {
-  background: #7B3F6E;
+  background: #FFAFCC;
 }

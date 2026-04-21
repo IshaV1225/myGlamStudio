@@ -34,7 +34,7 @@ const DEFAULT_PROFILE: UserProfile = {
   location: 'UAE',
   preferredBrands: ['Fenty Beauty', 'Charlotte Tilbury', 'Rare Beauty'],
   preferredLooks: ['Full Glam', 'Natural'],
-  heroGradient: 'linear-gradient(135deg, #4B3B8C 0%, #7B3F6E 50%, #F4796B 100%)',
+  heroGradient: 'linear-gradient(135deg, #CDB4DB 0%, #FFAFCC 30%, #FFC8DD 60%, #BDE0FE 80%, #A2D2FF 100%)',
   hasOnboarded: false,
 };
 
@@ -55,7 +55,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       const raw = localStorage.getItem('gs_profile');
-      if (raw) setProfile(JSON.parse(raw) as UserProfile);
+      if (raw) {
+        const stored = JSON.parse(raw) as UserProfile;
+        // Reset hero gradient if it contains old dark-theme colors
+        const isDarkGradient = /4B3B8C|7B3F6E|0F0A1E|1C1333|F4796B|F9B4A8/.test(stored.heroGradient ?? '');
+        if (isDarkGradient) stored.heroGradient = DEFAULT_PROFILE.heroGradient;
+        setProfile(stored);
+      }
     } catch { /* ignore */ }
   }, []);
 

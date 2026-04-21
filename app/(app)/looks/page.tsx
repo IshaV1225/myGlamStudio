@@ -52,7 +52,7 @@ export default function LooksPage() {
     setNewProducts([]); setProductInput(''); setImageCount(0);
   }
 
-  function handleAdd(e: React.FormEvent<HTMLFormElement>) {
+  function handleAdd(e: { preventDefault(): void }) {
     e.preventDefault();
     if (!newName.trim()) return;
     if (newTopFive && top5Count >= 5) return;
@@ -98,7 +98,7 @@ export default function LooksPage() {
                 filter === f ? 'bg-primary text-foreground' : 'bg-surface text-muted hover:text-foreground'
               }`}
             >
-              {f === 'all' ? `All Looks (${looks.length})` : `★ Top 5 (${top5Count})`}
+              {f === 'all' ? `All Looks (${looks.length})` : '♥ Top 5'}
             </button>
           ))}
         </div>
@@ -108,37 +108,27 @@ export default function LooksPage() {
           {filtered.map((look) => (
             <div
               key={look.id}
-              className="break-inside-avoid mb-4 hover:scale-[1.02] transition-transform duration-200 will-change-transform"
+              className="break-inside-avoid mb-4 group"
             >
-              <Link href={`/looks/${look.id}`} className="block relative rounded-2xl overflow-hidden group">
+              <Link href={`/looks/${look.id}`} className="block relative rounded-2xl overflow-hidden
+                          hover:scale-[1.02] transition-transform duration-200 will-change-transform">
                 {/* Cover image */}
                 <div className={`w-full ${look.heightClass}`} style={{ background: look.gradients[0] }} />
 
                 {/* Badges */}
-                <div className="absolute top-3 left-3 flex gap-1.5">
-                  {look.isTopFive && (
-                    <span className="bg-accent text-white text-xs px-2 py-1 rounded-full">★ Top 5</span>
-                  )}
-                  {look.gradients.length > 1 && (
-                    <span className="bg-black/40 text-white text-xs px-2 py-1 rounded-full">
-                      {look.gradients.length} photos
-                    </span>
-                  )}
-                </div>
+                {look.isTopFive && (
+                  <div className="absolute top-3 left-3">
+                    <span className="text-2xl leading-none" style={{ color: '#800E13' }}>♥</span>
+                  </div>
+                )}
 
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-2 group-hover:translate-y-0 transition-transform duration-200">
-                  <p className="text-foreground text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                    {look.name}
-                  </p>
-                  <span className="inline-block mt-1.5 text-xs bg-accent text-white px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                    View Look →
-                  </span>
-                </div>
+                {/* Subtle hover overlay */}
+                <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
               </Link>
 
-              <p className="mt-2 px-1 text-sm text-muted">{look.name}</p>
+              <p className="mt-2 px-1 text-sm text-foreground font-medium truncate">
+                {look.name}
+              </p>
             </div>
           ))}
         </div>

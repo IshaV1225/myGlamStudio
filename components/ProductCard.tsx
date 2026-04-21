@@ -23,10 +23,10 @@ export default function ProductCard({ product }: { product: ProductCardData }) {
         {/* Heart toggle */}
         <button
           onClick={() => setFav((prev) => !prev)}
-          className="absolute top-3 right-3 text-2xl leading-none transition-transform hover:scale-125 active:scale-95"
+          className="absolute top-3 right-3 text-3xl leading-none transition-transform hover:scale-125 active:scale-95"
           aria-label={fav ? 'Remove from favourites' : 'Add to favourites'}
         >
-          <span className={fav ? 'text-accent' : 'text-white/60'}>
+          <span style={fav ? { color: '#800E13' } : {}} className={!fav ? 'text-white/60' : ''}>
             {fav ? '♥' : '♡'}
           </span>
         </button>

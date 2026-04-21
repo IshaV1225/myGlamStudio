@@ -77,10 +77,10 @@ function ProductTile({
         {/* Heart */}
         <button
           onClick={(e) => { e.stopPropagation(); onToggleFav(); }}
-          className="absolute top-3 right-3 text-2xl leading-none transition-transform hover:scale-125 active:scale-95"
+          className="absolute top-3 right-3 text-3xl leading-none transition-transform hover:scale-125 active:scale-95"
           aria-label={product.isFavourite ? 'Remove from favourites' : 'Add to favourites'}
         >
-          <span className={product.isFavourite ? 'text-accent' : 'text-white/60'}>
+          <span style={product.isFavourite ? { color: '#800E13' } : {}} className={!product.isFavourite ? 'text-white/60' : ''}>
             {product.isFavourite ? '♥' : '♡'}
           </span>
         </button>
