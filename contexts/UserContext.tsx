@@ -1,9 +1,11 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/contexts/AuthContext';
 
 // ---------------------------------------------------------------------------
-// Types
+// Type
 // ---------------------------------------------------------------------------
 
 export interface UserProfile {
@@ -20,20 +22,16 @@ export interface UserProfile {
   hasOnboarded: boolean;
 }
 
-// ---------------------------------------------------------------------------
-// Defaults
-// ---------------------------------------------------------------------------
-
 const DEFAULT_PROFILE: UserProfile = {
-  name: 'Isha',
-  email: 'isha@example.com',
-  skinType: 'Combination',
-  skinTone: 'Medium',
-  complexion: 'Medium',
-  undertone: 'Warm',
-  location: 'UAE',
-  preferredBrands: ['Fenty Beauty', 'Charlotte Tilbury', 'Rare Beauty'],
-  preferredLooks: ['Full Glam', 'Natural'],
+  name: '',
+  email: '',
+  skinType: '',
+  skinTone: '',
+  complexion: '',
+  undertone: '',
+  location: '',
+  preferredBrands: [],
+  preferredLooks: [],
   heroGradient: 'linear-gradient(135deg, #CDB4DB 0%, #FFAFCC 30%, #FFC8DD 60%, #BDE0FE 80%, #A2D2FF 100%)',
   hasOnboarded: false,
 };
@@ -44,37 +42,94 @@ const DEFAULT_PROFILE: UserProfile = {
 
 interface UserCtx {
   profile: UserProfile;
-  updateProfile: (patch: Partial<UserProfile>) => void;
+  profileLoading: boolean; // true while the initial DB fetch is in flight
+  updateProfile: (patch: Partial<UserProfile>) => Promise<void>;
 }
 
 const UserContext = createContext<UserCtx | null>(null);
 
+// ---------------------------------------------------------------------------
+// DB row → TypeScript type
+// ---------------------------------------------------------------------------
+
+function rowToProfile(row: Record<string, unknown>): UserProfile {
+  return {
+    name:            (row.name            as string)   ?? '',
+    email:           (row.email           as string)   ?? '',
+    skinType:        (row.skin_type       as string)   ?? '',
+    skinTone:        (row.skin_tone       as string)   ?? '',
+    complexion:      (row.complexion      as string)   ?? '',
+    undertone:       (row.undertone       as string)   ?? '',
+    location:        (row.location        as string)   ?? '',
+    preferredBrands: (row.preferred_brands as string[]) ?? [],
+    preferredLooks:  (row.preferred_looks  as string[]) ?? [],
+    heroGradient:    (row.hero_gradient   as string)   || DEFAULT_PROFILE.heroGradient,
+    hasOnboarded:    (row.has_onboarded   as boolean)  ?? false,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Provider
+// ---------------------------------------------------------------------------
+
 export function UserProvider({ children }: { children: ReactNode }) {
-  const [profile, setProfile] = useState<UserProfile>(DEFAULT_PROFILE);
+  const { session } = useAuth();
+  const [profile, setProfile]           = useState<UserProfile>(DEFAULT_PROFILE);
+  const [profileLoading, setProfileLoading] = useState(true);
 
+  // Load profile from Supabase whenever the session changes.
+  // All setState calls are inside the async `load` function — never directly
+  // in the effect body — so the linter (react-hooks/set-state-in-effect) is satisfied.
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem('gs_profile');
-      if (raw) {
-        const stored = JSON.parse(raw) as UserProfile;
-        // Reset hero gradient if it contains old dark-theme colors
-        const isDarkGradient = /4B3B8C|7B3F6E|0F0A1E|1C1333|F4796B|F9B4A8/.test(stored.heroGradient ?? '');
-        if (isDarkGradient) stored.heroGradient = DEFAULT_PROFILE.heroGradient;
-        setProfile(stored);
+    async function load() {
+      if (!session) {
+        setProfile(DEFAULT_PROFILE);
+        setProfileLoading(false);
+        return;
       }
-    } catch { /* ignore */ }
-  }, []);
+      setProfileLoading(true);
+      const { data } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', session.user.id)
+        .single();
+      if (data) setProfile(rowToProfile(data));
+      setProfileLoading(false);
+    }
+    load();
+  }, [session]);
 
-  useEffect(() => {
-    localStorage.setItem('gs_profile', JSON.stringify(profile));
-  }, [profile]);
+  // Optimistic update: apply patch to local state immediately, then upsert to DB.
+  // Using the function form of setState ensures we always merge against the
+  // latest value, even if this is called multiple times before a re-render.
+  async function updateProfile(patch: Partial<UserProfile>) {
+    let merged!: UserProfile;
+    setProfile((prev) => {
+      merged = { ...prev, ...patch };
+      return merged;
+    });
 
-  function updateProfile(patch: Partial<UserProfile>) {
-    setProfile((prev) => ({ ...prev, ...patch }));
+    if (!session) return;
+
+    await supabase.from('profiles').upsert({
+      id:               session.user.id,
+      name:             merged.name,
+      email:            merged.email,
+      skin_type:        merged.skinType,
+      skin_tone:        merged.skinTone,
+      complexion:       merged.complexion,
+      undertone:        merged.undertone,
+      location:         merged.location,
+      preferred_brands: merged.preferredBrands,
+      preferred_looks:  merged.preferredLooks,
+      hero_gradient:    merged.heroGradient,
+      has_onboarded:    merged.hasOnboarded,
+      updated_at:       new Date().toISOString(),
+    });
   }
 
   return (
-    <UserContext.Provider value={{ profile, updateProfile }}>
+    <UserContext.Provider value={{ profile, profileLoading, updateProfile }}>
       {children}
     </UserContext.Provider>
   );

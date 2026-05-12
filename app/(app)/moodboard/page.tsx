@@ -14,10 +14,10 @@ const inputCls =
 // ---------------------------------------------------------------------------
 
 function ImageLightbox({
-  gradients, index, onClose,
-}: { gradients: string[]; index: number; onClose: () => void }) {
+  imageUrls, index, onClose,
+}: { imageUrls: string[]; index: number; onClose: () => void }) {
   const [idx, setIdx] = useState(index);
-  const total = gradients.length;
+  const total = imageUrls.length;
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -52,13 +52,13 @@ function ImageLightbox({
 
       <div
         className="w-72 sm:w-96 aspect-square rounded-3xl transition-all duration-500 shadow-2xl"
-        style={{ background: gradients[idx] }}
+        style={{ background: imageUrls[idx] }}
         onClick={(e) => e.stopPropagation()}
       />
 
       {total > 1 && (
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
-          {gradients.map((_, i) => (
+          {imageUrls.map((_, i) => (
             <button key={i} onClick={(e) => { e.stopPropagation(); setIdx(i); }}
               className={`h-2 rounded-full transition-all ${i === idx ? 'w-6 bg-white' : 'w-2 bg-white/40'}`} />
           ))}
@@ -110,7 +110,7 @@ function BoardViewer({
           <div className="overflow-y-auto p-6 space-y-6">
             {/* Image grid — each tile clickable */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {board.gradients.map((g, i) => (
+              {board.imageUrls.map((g, i) => (
                 <button
                   key={i}
                   onClick={() => setLightboxIndex(i)}
@@ -205,7 +205,7 @@ function BoardViewer({
 
       {lightboxIndex !== null && (
         <ImageLightbox
-          gradients={board.gradients}
+          imageUrls={board.imageUrls}
           index={lightboxIndex}
           onClose={() => setLightboxIndex(null)}
         />
@@ -236,9 +236,8 @@ export default function MoodBoardPage() {
     if (!newName.trim()) return;
 
     addBoard({
-      id: Date.now().toString(),
       name: newName.trim(),
-      gradients: makeGradients(imageCount || 3),
+      imageUrls: makeGradients(imageCount || 3),
     });
     resetForm();
     setAddOpen(false);
@@ -281,7 +280,7 @@ export default function MoodBoardPage() {
                     <div
                       key={i}
                       className="w-full h-full"
-                      style={{ background: board.gradients[i % board.gradients.length] }}
+                      style={{ background: board.imageUrls[i % board.imageUrls.length] }}
                     />
                   ))}
                 </div>
@@ -289,7 +288,7 @@ export default function MoodBoardPage() {
                 {/* Name + photo count */}
                 <div className="px-4 py-3 flex items-center justify-between">
                   <p className="text-foreground text-sm font-medium truncate">{board.name}</p>
-                  <span className="text-muted/60 text-xs shrink-0 ml-2">{board.gradients.length} photos</span>
+                  <span className="text-muted/60 text-xs shrink-0 ml-2">{board.imageUrls.length} photos</span>
                 </div>
 
                 {/* AI badge */}
@@ -315,8 +314,8 @@ export default function MoodBoardPage() {
           board={selectedBoard}
           onClose={() => setSelectedBoard(null)}
           onAddImages={(count) => {
-            const newGradients = makeGradients(selectedBoard.gradients.length + count).slice(selectedBoard.gradients.length);
-            const updated = { ...selectedBoard, gradients: [...selectedBoard.gradients, ...newGradients] };
+            const newGradients = makeGradients(selectedBoard.imageUrls.length + count).slice(selectedBoard.imageUrls.length);
+            const updated = { ...selectedBoard, imageUrls: [...selectedBoard.imageUrls, ...newGradients] };
             updateBoard(updated);
             setSelectedBoard(updated);
           }}

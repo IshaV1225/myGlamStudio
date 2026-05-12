@@ -1,21 +1,23 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/contexts/AuthContext';
 
 // ---------------------------------------------------------------------------
-// Types
+// Type
 // ---------------------------------------------------------------------------
 
 export interface MoodBoard {
   id: string;
   name: string;
-  gradients: string[];   // placeholder until real images
+  imageUrls: string[];           // CSS gradients now; real image URLs after step 2
   aiDescription?: string;
   pinterestBoardUrl?: string;
 }
 
 // ---------------------------------------------------------------------------
-// Palette helper
+// Gradient palette — placeholder images until real uploads are wired (step 2)
 // ---------------------------------------------------------------------------
 
 const PALETTE = [
@@ -34,61 +36,89 @@ export function makeGradients(count: number): string[] {
 }
 
 // ---------------------------------------------------------------------------
-// Mock data
-// ---------------------------------------------------------------------------
-
-const INITIAL_BOARDS: MoodBoard[] = [
-  {
-    id: 'mb1', name: 'Evening Edit',
-    gradients: [PALETTE[0], PALETTE[3], PALETTE[7], PALETTE[1]],
-    aiDescription: 'A deep, sultry palette of indigos and plums — perfect for dramatic evening looks with smoky eyes and bold lips.',
-  },
-  {
-    id: 'mb2', name: 'Clean Girl',
-    gradients: [PALETTE[4], PALETTE[5], PALETTE[2]],
-    aiDescription: 'Soft, effortless aesthetics with muted lavenders and blush tones. Minimal makeup, maximum glow.',
-  },
-  {
-    id: 'mb3', name: 'Smoky',
-    gradients: [PALETTE[2], PALETTE[0], PALETTE[6]],
-  },
-  {
-    id: 'mb4', name: 'Icy',
-    gradients: [PALETTE[4], PALETTE[6], PALETTE[5], PALETTE[1], PALETTE[3]],
-    aiDescription: 'Cool, silvery tones reminiscent of frost and crystal. Ideal for icy highlight looks and glass-skin finishes.',
-  },
-];
-
-// ---------------------------------------------------------------------------
 // Context
 // ---------------------------------------------------------------------------
 
 interface MoodBoardCtx {
   boards: MoodBoard[];
-  addBoard: (b: MoodBoard) => void;
-  updateBoard: (b: MoodBoard) => void;
-  removeBoard: (id: string) => void;
+  addBoard:    (b: Omit<MoodBoard, 'id'>) => Promise<void>;
+  updateBoard: (b: MoodBoard)             => Promise<void>;
+  removeBoard: (id: string)               => Promise<void>;
 }
 
 const MoodBoardContext = createContext<MoodBoardCtx | null>(null);
 
+// ---------------------------------------------------------------------------
+// DB ↔ TypeScript mapper
+// ---------------------------------------------------------------------------
+
+function rowToBoard(row: Record<string, unknown>): MoodBoard {
+  return {
+    id:                 row.id                   as string,
+    name:               row.name                 as string,
+    imageUrls:          (row.image_urls          as string[]) ?? [],
+    aiDescription:      (row.ai_description      as string)  || undefined,
+    pinterestBoardUrl:  (row.pinterest_board_url as string)  || undefined,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Provider
+// ---------------------------------------------------------------------------
+
 export function MoodBoardProvider({ children }: { children: ReactNode }) {
-  const [boards, setBoards] = useState<MoodBoard[]>(INITIAL_BOARDS);
+  const { session } = useAuth();
+  const [boards, setBoards] = useState<MoodBoard[]>([]);
+  const userId = session?.user.id;
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem('gs_moodboards');
-      if (raw) setBoards(JSON.parse(raw) as MoodBoard[]);
-    } catch { /* ignore */ }
-  }, []);
+    if (!userId) return;
 
-  useEffect(() => {
-    localStorage.setItem('gs_moodboards', JSON.stringify(boards));
-  }, [boards]);
+    supabase
+      .from('moodboards')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .then(({ data }) => {
+        if (data) setBoards(data.map(rowToBoard));
+      });
+  }, [userId]);
 
-  function addBoard(b: MoodBoard)    { setBoards((prev) => [b, ...prev]); }
-  function updateBoard(b: MoodBoard) { setBoards((prev) => prev.map((x) => x.id === b.id ? b : x)); }
-  function removeBoard(id: string)   { setBoards((prev) => prev.filter((b) => b.id !== id)); }
+  async function addBoard(b: Omit<MoodBoard, 'id'>) {
+    if (!userId) return;
+    const { data } = await supabase
+      .from('moodboards')
+      .insert({
+        user_id:             userId,
+        name:                b.name,
+        image_urls:          b.imageUrls,
+        ai_description:      b.aiDescription      ?? null,
+        pinterest_board_url: b.pinterestBoardUrl  ?? null,
+      })
+      .select()
+      .single();
+    if (data) setBoards((prev) => [rowToBoard(data), ...prev]);
+  }
+
+  async function updateBoard(b: MoodBoard) {
+    if (!userId) return;
+    await supabase
+      .from('moodboards')
+      .update({
+        name:                b.name,
+        image_urls:          b.imageUrls,
+        ai_description:      b.aiDescription      ?? null,
+        pinterest_board_url: b.pinterestBoardUrl  ?? null,
+      })
+      .eq('id', b.id);
+    setBoards((prev) => prev.map((x) => x.id === b.id ? b : x));
+  }
+
+  async function removeBoard(id: string) {
+    if (!userId) return;
+    await supabase.from('moodboards').delete().eq('id', id);
+    setBoards((prev) => prev.filter((b) => b.id !== id));
+  }
 
   return (
     <MoodBoardContext.Provider value={{ boards, addBoard, updateBoard, removeBoard }}>

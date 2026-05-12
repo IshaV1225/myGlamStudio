@@ -57,12 +57,11 @@ export default function LooksPage() {
     if (!newName.trim()) return;
     if (newTopFive && top5Count >= 5) return;
 
-    const newLook: Look = {
-      id: Date.now().toString(),
+    const newLook: Omit<Look, 'id'> = {
       name: newName.trim(),
       isTopFive: newTopFive,
       heightClass: HEIGHT_CLASSES[Math.floor(Math.random() * HEIGHT_CLASSES.length)],
-      gradients: makeGradients(imageCount || 1),
+      imageUrls: makeGradients(imageCount || 1),
       steps: newSteps.filter(Boolean),
       productsUsed: newProducts,
       moodBoards: [],
@@ -113,7 +112,7 @@ export default function LooksPage() {
               <Link href={`/looks/${look.id}`} className="block relative rounded-2xl overflow-hidden
                           hover:scale-[1.02] transition-transform duration-200 will-change-transform">
                 {/* Cover image */}
-                <div className={`w-full ${look.heightClass}`} style={{ background: look.gradients[0] }} />
+                <div className={`w-full ${look.heightClass}`} style={{ background: look.imageUrls[0] }} />
 
                 {/* Badges */}
                 {look.isTopFive && (

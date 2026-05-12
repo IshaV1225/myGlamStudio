@@ -10,10 +10,10 @@ import { useLooks, makeGradients } from '@/contexts/LooksContext';
 // ---------------------------------------------------------------------------
 
 function Lightbox({
-  gradients, startIndex, onClose,
-}: { gradients: string[]; startIndex: number; onClose: () => void }) {
+  imageUrls, startIndex, onClose,
+}: { imageUrls: string[]; startIndex: number; onClose: () => void }) {
   const [idx, setIdx] = useState(startIndex);
-  const total = gradients.length;
+  const total = imageUrls.length;
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -37,10 +37,10 @@ function Lightbox({
           className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 text-white text-2xl flex items-center justify-center z-10">›</button>
       </>}
       <div className="w-full max-w-lg mx-16 aspect-3/4 rounded-2xl transition-all duration-500"
-        style={{ background: gradients[idx] }} onClick={(e) => e.stopPropagation()} />
+        style={{ background: imageUrls[idx] }} onClick={(e) => e.stopPropagation()} />
       {total > 1 && (
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
-          {gradients.map((_, i) => (
+          {imageUrls.map((_, i) => (
             <button key={i} onClick={(e) => { e.stopPropagation(); setIdx(i); }}
               className={`h-2 rounded-full transition-all ${i === idx ? 'w-6 bg-white' : 'w-2 bg-white/40'}`} />
           ))}
@@ -79,15 +79,15 @@ export default function LookDetailPage() {
   const [editSteps, setEditSteps]         = useState<string[]>([]);
   const [editProducts, setEditProducts]   = useState<string[]>([]);
   const [productInput, setProductInput]   = useState('');
-  const [editGradients, setEditGradients] = useState<string[]>([]);
+  const [editImageUrls, setEditImageUrls] = useState<string[]>([]);
   const [newImgCount, setNewImgCount]     = useState(0);
 
   // Hover auto-rotation
   const rotationRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   function startRotation() {
-    if (!look || look.gradients.length <= 1) return;
-    rotationRef.current = setInterval(() => setCurrentImg((i) => (i + 1) % look.gradients.length), 3000);
+    if (!look || look.imageUrls.length <= 1) return;
+    rotationRef.current = setInterval(() => setCurrentImg((i) => (i + 1) % look.imageUrls.length), 3000);
   }
   function stopRotation() {
     if (rotationRef.current) clearInterval(rotationRef.current);
@@ -103,7 +103,7 @@ export default function LookDetailPage() {
     setEditTopFive(look.isTopFive);
     setEditSteps(look.steps.length ? [...look.steps] : ['']);
     setEditProducts([...look.productsUsed]);
-    setEditGradients([...look.gradients]);
+    setEditImageUrls([...look.imageUrls]);
     setProductInput('');
     setNewImgCount(0);
     setEditOpen(true);
@@ -125,7 +125,7 @@ export default function LookDetailPage() {
 
   // Remove one existing image slide
   function removeImage(i: number) {
-    setEditGradients((g) => g.filter((_, idx) => idx !== i));
+    setEditImageUrls((g) => g.filter((_, idx) => idx !== i));
   }
 
   // Can this look be toggled into Top 5?
@@ -137,9 +137,9 @@ export default function LookDetailPage() {
   function handleSave() {
     if (!look || !editName.trim()) return;
 
-    // Build final gradients: keep remaining existing ones + new uploaded ones
-    const finalGradients = [
-      ...editGradients,
+    // Build final imageUrls: keep remaining existing ones + new uploaded ones
+    const finalImageUrls = [
+      ...editImageUrls,
       ...makeGradients(newImgCount).slice(0, newImgCount),
     ];
 
@@ -149,7 +149,7 @@ export default function LookDetailPage() {
       isTopFive: editTopFive,
       steps: editSteps.filter(Boolean),
       productsUsed: editProducts,
-      gradients: finalGradients.length > 0 ? finalGradients : look.gradients,
+      imageUrls: finalImageUrls.length > 0 ? finalImageUrls : look.imageUrls,
     });
 
     setEditOpen(false);
@@ -170,7 +170,7 @@ export default function LookDetailPage() {
     );
   }
 
-  const total = look.gradients.length;
+  const total = look.imageUrls.length;
 
   return (
     <div className="min-h-screen bg-bg pb-16">
@@ -188,7 +188,7 @@ export default function LookDetailPage() {
               className="relative w-full aspect-3/4 rounded-2xl overflow-hidden cursor-pointer group"
               onMouseEnter={startRotation} onMouseLeave={stopRotation} onClick={openLightbox}
             >
-              <div className="absolute inset-0 transition-all duration-700" style={{ background: look.gradients[currentImg] }} />
+              <div className="absolute inset-0 transition-all duration-700" style={{ background: look.imageUrls[currentImg] }} />
               {total > 1 && <>
                 <button onClick={(e) => { e.stopPropagation(); setCurrentImg((i) => (i - 1 + total) % total); }}
                   className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 text-white flex items-center justify-center hover:bg-black/60 transition-colors">‹</button>
@@ -197,7 +197,7 @@ export default function LookDetailPage() {
               </>}
               {total > 1 && (
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
-                  {look.gradients.map((_, i) => (
+                  {look.imageUrls.map((_, i) => (
                     <button key={i} onClick={(e) => { e.stopPropagation(); setCurrentImg(i); }}
                       className={`h-2 rounded-full transition-all ${i === currentImg ? 'w-4 bg-white' : 'w-2 bg-white/50'}`} />
                   ))}
@@ -207,7 +207,7 @@ export default function LookDetailPage() {
 
             {total > 1 && (
               <div className="flex gap-2">
-                {look.gradients.map((g, i) => (
+                {look.imageUrls.map((g, i) => (
                   <button key={i} onClick={() => setCurrentImg(i)}
                     className={`w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${i === currentImg ? 'border-accent' : 'border-transparent opacity-60 hover:opacity-100'}`}
                     style={{ background: g }} />
@@ -273,7 +273,7 @@ export default function LookDetailPage() {
       </div>
 
       {/* ── Lightbox ── */}
-      {lightboxOpen && <Lightbox gradients={look.gradients} startIndex={currentImg} onClose={() => setLightboxOpen(false)} />}
+      {lightboxOpen && <Lightbox imageUrls={look.imageUrls} startIndex={currentImg} onClose={() => setLightboxOpen(false)} />}
 
       {/* ── Edit Modal ── */}
       <Modal open={editOpen} onClose={() => setEditOpen(false)} title="Edit Look">
@@ -290,11 +290,11 @@ export default function LookDetailPage() {
           <div className="space-y-2">
             <label className="text-muted text-sm">
               Current Images
-              <span className="ml-2 text-muted/50 text-xs">({editGradients.length} slide{editGradients.length !== 1 ? 's' : ''})</span>
+              <span className="ml-2 text-muted/50 text-xs">({editImageUrls.length} slide{editImageUrls.length !== 1 ? 's' : ''})</span>
             </label>
-            {editGradients.length > 0 ? (
+            {editImageUrls.length > 0 ? (
               <div className="flex flex-wrap gap-2">
-                {editGradients.map((g, i) => (
+                {editImageUrls.map((g, i) => (
                   <div key={i} className="relative group">
                     <div className="w-16 h-16 rounded-lg" style={{ background: g }} />
                     <button

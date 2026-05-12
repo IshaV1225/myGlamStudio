@@ -16,7 +16,8 @@ const BRAND_SUGGESTIONS = [
   'Fenty Beauty', 'Charlotte Tilbury', 'Rare Beauty', 'Anastasia Beverly Hills',
   'Lancôme', 'NARS', 'MAC', 'NYX', 'Urban Decay', 'Too Faced',
   'Huda Beauty', 'Dior Beauty', 'YSL Beauty', 'Givenchy', 'Laura Mercier',
-  'Bobbi Brown', 'Giorgio Armani Beauty', 'Hourglass', 'Pat McGrath', 'Ilia',
+  'Bobbi Brown', 'Giorgio Armani Beauty', 'Patrick Ta', 'Makeup By Mario','Chanel Beauty',
+  'Hourglass', 'Pat McGrath', 'Ilia', 'Kiko Milano', 'Stilla', 'Kylie Cosmetics',
 ];
 
 const TOTAL_STEPS = 9;
@@ -155,8 +156,8 @@ export default function OnboardingPage() {
     setBrands((prev) => prev.includes(b) ? prev.filter((x) => x !== b) : [...prev, b]);
   }
 
-  function finish() {
-    updateProfile({
+  async function finish() {
+    await updateProfile({
       name:            name.trim() || 'Isha',
       skinType,
       skinTone,

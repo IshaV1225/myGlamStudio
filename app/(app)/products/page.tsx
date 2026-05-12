@@ -32,7 +32,7 @@ function ProductLightbox({ product, onClose }: { product: Product; onClose: () =
 
       <div
         className="relative w-72 sm:w-80 rounded-3xl overflow-hidden shadow-2xl"
-        style={{ background: product.gradient }}
+        style={{ background: product.imageUrl }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="w-full aspect-3/4" />
@@ -71,7 +71,7 @@ function ProductTile({
       onMouseLeave={() => setHovered(false)}
       onClick={onOpen}
     >
-      <div className="rounded-2xl overflow-hidden relative" style={{ background: product.gradient }}>
+      <div className="rounded-2xl overflow-hidden relative" style={{ background: product.imageUrl }}>
         <div className="w-full h-56" />
 
         {/* Heart */}
@@ -136,10 +136,9 @@ export default function ProductsPage() {
 
     const seed = products.length;
     addProduct({
-      id: Date.now().toString(),
       name: newName.trim(),
       brand: newBrand.trim() || 'Unknown Brand',
-      gradient: randomGradient(seed),
+      imageUrl: randomGradient(seed),
       isFavourite: newFav,
     });
     resetProductForm();
@@ -157,7 +156,6 @@ export default function ProductsPage() {
     e.preventDefault();
     if (!newBrandName.trim()) return;
     addBrand({
-      id: Date.now().toString(),
       name: newBrandName.trim(),
       websiteUrl: newBrandUrl.trim() || undefined,
     });
