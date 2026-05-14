@@ -20,24 +20,34 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 import { useUser } from '@/contexts/UserContext';
 
 export default function RootPage() {
   const router = useRouter();
+  const { session, loading: authLoading } = useAuth();
   const { profile, profileLoading } = useUser();
 
   useEffect(() => {
-    // Wait until the profile DB fetch is complete before redirecting.
-    // Without this guard, a returning user would land on /onboarding because
-    // hasOnboarded defaults to false before the Supabase response arrives.
+    // 1. Auth check still in progress — wait
+    if (authLoading) return;
+
+    // 2. No session — user is not logged in, send to login
+    if (!session) {
+      router.replace('/login');
+      return;
+    }
+
+    // 3. Logged in but profile DB fetch still in progress — wait
     if (profileLoading) return;
 
+    // 4. Profile loaded — route based on whether onboarding is complete
     if (profile.hasOnboarded) {
       router.replace('/home');
     } else {
       router.replace('/onboarding');
     }
-  }, [profile.hasOnboarded, profileLoading, router]);
+  }, [authLoading, session, profileLoading, profile.hasOnboarded, router]);
 
   return null;
 }

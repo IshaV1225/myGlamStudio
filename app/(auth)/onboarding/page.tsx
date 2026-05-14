@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 import { useUser } from '@/contexts/UserContext';
 
 // ---------------------------------------------------------------------------
@@ -106,7 +107,14 @@ function StepShell({
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const { updateProfile } = useUser();
+  const { session, loading: authLoading } = useAuth();
+  const { profile, profileLoading, updateProfile } = useUser();
+
+  useEffect(() => {
+    if (authLoading || profileLoading) return;
+    if (!session) { router.replace('/login'); return; }
+    if (profile.hasOnboarded) { router.replace('/home'); }
+  }, [authLoading, session, profileLoading, profile.hasOnboarded, router]);
 
   const [step, setStep] = useState(1);
 

@@ -73,15 +73,18 @@ function rowToProfile(row: Record<string, unknown>): UserProfile {
 // ---------------------------------------------------------------------------
 
 export function UserProvider({ children }: { children: ReactNode }) {
-  const { session } = useAuth();
+  const { session, loading: authLoading } = useAuth();
   const [profile, setProfile]           = useState<UserProfile>(DEFAULT_PROFILE);
   const [profileLoading, setProfileLoading] = useState(true);
 
   // Load profile from Supabase whenever the session changes.
-  // All setState calls are inside the async `load` function — never directly
-  // in the effect body — so the linter (react-hooks/set-state-in-effect) is satisfied.
+  // We wait for auth to finish loading before acting — otherwise the first
+  // effect run sees session=null (auth not yet resolved) and sets profileLoading=false
+  // prematurely, causing app/page.tsx to route to /onboarding before the real
+  // session and profile have loaded.
   useEffect(() => {
     async function load() {
+      if (authLoading) return;
       if (!session) {
         setProfile(DEFAULT_PROFILE);
         setProfileLoading(false);
@@ -93,11 +96,25 @@ export function UserProvider({ children }: { children: ReactNode }) {
         .select('*')
         .eq('id', session.user.id)
         .single();
-      if (data) setProfile(rowToProfile(data));
+
+      if (data) {
+        // Returning user — profile row exists, load it normally
+        setProfile(rowToProfile(data));
+      } else {
+        // First login (e.g. via Google OAuth) — no profile row yet.
+        // Supabase stores the Google account's name and email in user_metadata.
+        // Pre-fill from there so the NavBar title isn't blank before onboarding.
+        const meta = session.user.user_metadata ?? {};
+        setProfile({
+          ...DEFAULT_PROFILE,
+          name:  (meta.full_name as string) || (meta.name as string) || '',
+          email: session.user.email ?? '',
+        });
+      }
       setProfileLoading(false);
     }
     load();
-  }, [session]);
+  }, [session, authLoading]);
 
   // Optimistic update: apply patch to local state immediately, then upsert to DB.
   // Using the function form of setState ensures we always merge against the
